@@ -7,17 +7,34 @@ namespace MonteCarlo
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-            Console.Write("How many elements in an array?: ");
-
-            int size = Console.Read();
-
-            Pi(size);
+            try
+            {
+                Pi(getSize());
+            }
+            catch (OutOfMemoryException)
+            {
+                Console.WriteLine("\nLet's try with smaller number.");
+                Pi(getSize());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nPlease check your input.");
+                Pi(getSize());
+            }
         }
 
-        static double Pi(int size)
+        static double getSize()
         {
-            coordinate[] point = new coordinate[size];
+            Console.Write("How many elements in an array?: ");
+
+            double size = int.Parse(Console.ReadLine());
+
+            return size;
+        }
+
+        static double Pi(double size)
+        {
+            coordinate[] point = new coordinate[(int)size];
             int count = 0;
 
             for (int i = 0; i < point.Length; i++)
@@ -30,15 +47,18 @@ namespace MonteCarlo
                     count++;
                 }
             }
-            double myPi = ((double)count / point.Length) * 4;
+            double myPi = ((double)count / point.Length) * 4.0;
 
             Console.WriteLine($"The average of my pi is {myPi}");
-            Console.WriteLine($"precision of this exercise is {diffPi(size)}");
+            Console.WriteLine($"precision of this exercise is {diffPi(myPi)}");
 
             return myPi;
         }
 
-        static double diffPi(int size) => Math.Abs(Math.PI - Pi(size));
+        static double diffPi(double myPi)
+        {
+            return Math.Abs(Math.PI - myPi);
+        }
 
         struct coordinate
         {
